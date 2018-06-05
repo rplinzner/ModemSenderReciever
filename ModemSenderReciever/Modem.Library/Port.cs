@@ -48,6 +48,12 @@ namespace Modem.Library
         {
             _port.Close();
         }
+
+        public bool CheckBufferEmpty()
+        {
+            if (_port.BytesToRead == 0) return true;
+            return false;
+        }
         public byte Read()
         {
             

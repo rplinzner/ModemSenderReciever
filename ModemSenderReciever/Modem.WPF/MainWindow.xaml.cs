@@ -27,9 +27,8 @@ namespace Modem.WPF
     {
         private readonly ObservableCollection<string> _list = new ObservableCollection<string>();
         private Port SelectedPort { get; set; }
-        private Task _recieveTask;
-        static CancellationTokenSource ts = new CancellationTokenSource();
-        CancellationToken ct = ts.Token;
+        private Thread thread;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -66,7 +65,7 @@ namespace Modem.WPF
             if (ParityComboBox.SelectedIndex == 2) temp = Parity.None;
             if (ParityComboBox.SelectedIndex == 3) temp = Parity.Mark;
             if (ParityComboBox.SelectedIndex == 4) temp = Parity.Space;
-           
+
             SelectedPort = new Port(PortsComboBox.Text, Int32.Parse(BaudComboBox.Text), Int32.Parse(BitsComboBox.Text), temp);
             SelectedPort.Open();
             OpnPrtBtn.IsEnabled = false;
@@ -80,9 +79,10 @@ namespace Modem.WPF
 
         private void ClsPrtBtn_Click(object sender, RoutedEventArgs e) //close port
         {
-            ts.Cancel();
+            if(thread.IsAlive) thread.Abort();
+            RecieveButton.Content = "START RECIEVING";
             SelectedPort.Close();
-            OpnPrtBtn.IsEnabled = false;
+            OpnPrtBtn.IsEnabled = true;
             ClsPrtBtn.IsEnabled = false;
             AnswerBtn.IsEnabled = false;
             CallBtn.IsEnabled = false;
@@ -92,7 +92,7 @@ namespace Modem.WPF
 
         private void CallBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(NumberTextBox.Text == "")
+            if (NumberTextBox.Text == "")
             {
                 MessageBox.Show("Please type number before calling!", "Information", MessageBoxButton.OK,
                     MessageBoxImage.Information);
@@ -123,55 +123,39 @@ namespace Modem.WPF
         }
 
         //TODO: TEST TASK AND ADD CANCELATION TOKEN
-       /* private void Recieve()
+        private void Recieve()
         {
+            string up = "";
             while (true)
             {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    Recieve_TextBox.Text += SelectedPort.Read().ToString();
-                }), DispatcherPriority.Background);
-
-               
+                
+                up += Handler.Recieve(SelectedPort);
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(delegate
+                    {
+                        Recieve_TextBox.Text = up;
+                    }));
             }
-        }*/
+        }
 
         private void RecieveButton_Click(object sender, RoutedEventArgs e)
         {
             if (RecieveButton.Content.ToString() == "STOP RECIEVING")
             {
-                ts.Cancel();
-                RecieveButton.IsEnabled = false;
+                thread.Abort();
+                RecieveButton.Content = "START RECIEVING";
+                return;
             }
 
             if (RecieveButton.Content.ToString() == "START RECIEVING")
             {
-                RecieveButton.Content = "STOP RECIEVING";            
+                RecieveButton.Content = "STOP RECIEVING";
             }
-
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        byte temp = SelectedPort.Read();
-                        byte[] Char = {temp};
-                        if (temp != 0)
-                        {
-                            Recieve_TextBox.Text += Encoding.UTF8.GetString(Char);
-                        }
-                        Thread.Sleep(1000);
-                    }), DispatcherPriority.Background);
-                    Thread.Sleep(1000);
-                    if (ct.IsCancellationRequested)
-                    {
-                        // another thread decided to cancel
-                        break;
-                    }
-                }
-            }, ct);
+            
+            thread = new Thread(Recieve);
+            thread.IsBackground = true;
+            thread.Start();
         }
+
 
         //TExtbox with number will accept only numbers
         private void NumberTextBox_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -185,6 +169,6 @@ namespace Modem.WPF
             base.OnPreviewTextInput(e);
         }
 
-       
+
     }
 }
