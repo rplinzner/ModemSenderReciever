@@ -45,7 +45,9 @@ namespace Modem.Library
         }
         public byte Read()
         {
+            
             return (byte)_port.ReadByte();
+            
         }
 
 

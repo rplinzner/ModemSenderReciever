@@ -146,8 +146,7 @@ namespace Modem.WPF
 
             if (RecieveButton.Content.ToString() == "START RECIEVING")
             {
-                RecieveButton.Content = "STOP RECIEVING";
-                
+                RecieveButton.Content = "STOP RECIEVING";            
             }
 
             Task.Factory.StartNew(() =>
@@ -156,13 +155,18 @@ namespace Modem.WPF
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        Recieve_TextBox.Text += "a";
+                        byte temp = SelectedPort.Read();
+                        byte[] Char = {temp};
+                        if (temp != 0)
+                        {
+                            Recieve_TextBox.Text += Encoding.UTF8.GetString(Char);
+                        }
+                        
                     }), DispatcherPriority.Background);
                     Thread.Sleep(100);
                     if (ct.IsCancellationRequested)
                     {
                         // another thread decided to cancel
-                        Console.WriteLine("task canceled");
                         break;
                     }
                 }
