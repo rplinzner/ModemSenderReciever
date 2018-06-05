@@ -1,0 +1,109 @@
+﻿<Window x:Class="Modem.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="Modem Sender Reciever by Rafał Plinzner and Michał Białecki"
+        xmlns:local="clr-namespace:Modem.WPF"
+        mc:Ignorable="d"
+        Height="480" Width="800">
+    <Border Padding="10">
+        <StackPanel>
+            <!-- Podstawowe Informacje o programie-->
+            <TextBlock Background="#c2d9e8"  Text="Telekomunikacja - Zadanie 3 By Rafał Plinzner and Michał Białecki" TextAlignment="Center" FontWeight="SemiBold" FontSize="15" />
+            <!-- Kontrolki do podstawowej obsługi programu-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="PORT SETTINGS" FontWeight="Bold" FontSize="15" TextAlignment="Center" Padding="0 5 0 0" />
+                <TextBlock Grid.Column="1" Text="CALLING" FontWeight="Bold" FontSize="15" TextAlignment="Center" Padding="0 5 0 0" />
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="AVAILABLE PORTS" FontWeight="Bold" TextAlignment="Center" Padding="0 5 0 0" />
+                    <ComboBox x:Name="PortsComboBox" Margin="10 5 10 0 "></ComboBox>
+
+                    <TextBlock Text="BAUD RATE" FontWeight="Bold" TextAlignment="Center" Padding="0 10 0 0" />
+                    <ComboBox x:Name="BaudComboBox" Margin="10 5 10 0 ">
+                        <ComboBoxItem>1200</ComboBoxItem>
+                        <ComboBoxItem>2400</ComboBoxItem>
+                        <ComboBoxItem>4800</ComboBoxItem>
+                        <ComboBoxItem>9600</ComboBoxItem>
+                        <ComboBoxItem>14400</ComboBoxItem>
+                        <ComboBoxItem>19200</ComboBoxItem>
+                        <ComboBoxItem>38400</ComboBoxItem>
+                        <ComboBoxItem>56000</ComboBoxItem>
+                        <ComboBoxItem>57600</ComboBoxItem>
+                        <ComboBoxItem>115200</ComboBoxItem>
+                    </ComboBox>
+
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="DATA BITS" FontWeight="Bold" TextAlignment="Center" Padding="0 5 0 0" />
+                    <ComboBox x:Name="BitsComboBox"  Margin="10 5 10 0 ">
+                        <ComboBoxItem>4</ComboBoxItem>
+                        <ComboBoxItem>5</ComboBoxItem>
+                        <ComboBoxItem>6</ComboBoxItem>
+                        <ComboBoxItem>7</ComboBoxItem>
+                        <ComboBoxItem>8</ComboBoxItem>
+                    </ComboBox>
+
+                    <TextBlock Text="PARITY" FontWeight="Bold" TextAlignment="Center" Padding="0 10 0 0" />
+                    <ComboBox x:Name="ParityComboBox"  Margin="10 5 10 0 ">
+                        <ComboBoxItem>EVEN</ComboBoxItem>
+                        <ComboBoxItem>ODD</ComboBoxItem>
+                        <ComboBoxItem>NO</ComboBoxItem>
+                        <ComboBoxItem>MARK</ComboBoxItem>
+                        <ComboBoxItem>SPACE</ComboBoxItem>
+                        
+                    </ComboBox>
+
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2">
+                    <Button x:Name="OpnPrtBtn" Content="Open Port" Margin="10 25 10 0" IsEnabled="True" BorderThickness="2" Click="OpnPrtBtn_OnClick"/>
+                    <Button x:Name="ClsPrtBtn" Content="Close Port" Margin="10 32 10 0" IsEnabled="False" BorderThickness="2" Click="ClsPrtBtn_Click"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="3">
+                    <TextBlock Text="NUMBER" FontWeight="Bold" TextAlignment="Center" Padding="0 10 0 0" />
+                    <TextBox x:Name="NumberTextBox" Margin="30 5" IsEnabled="True" PreviewTextInput="NumberTextBox_OnPreviewTextInput"></TextBox>
+                    <Button x:Name="CallBtn" Content="Call" Margin="40 0 40 0" IsEnabled="False" BorderThickness="2" Click="CallBtn_Click"/>
+                    <Button x:Name="AnswerBtn" Content="Answer" Margin="40 5 40 0" IsEnabled="False" BorderThickness="2" Click="AnswerBtn_Click"/>
+                </StackPanel>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="SENDING" FontWeight="Bold" TextAlignment="Center" Padding="0 10 0 0" />
+                    <TextBox x:Name="Send_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                             Margin="0 5 5 0" Height="200"/>
+                    <Button x:Name="SendButton" Margin="10 20" Content="SEND" IsEnabled="False" Click="SendButton_Click"/>
+
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="RECIEVING" FontWeight="Bold" TextAlignment="Center" Padding="0 10 0 0" />
+                    <Button x:Name="RecieveButton" Margin="10 5" Content="START RECIEVING" IsEnabled="False" Click="RecieveButton_Click"/>
+                    <TextBox x:Name="Recieve_TextBox" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                             Margin="5 15 0 0" Height="200"/>
+                    
+
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>
