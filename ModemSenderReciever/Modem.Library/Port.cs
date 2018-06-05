@@ -26,6 +26,11 @@ namespace Modem.Library
         {
             _port.Write(buffer, offset, count);
         }
+
+        public void WriteString(string message)
+        {
+            _port.Write(message);
+        }
         public void WriteCharacter(byte character)
         {
             var bytes = new byte[1]

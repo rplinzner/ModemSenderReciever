@@ -106,7 +106,7 @@ namespace Modem.WPF
         {
             CallBtn.IsEnabled = false;
             NumberTextBox.IsEnabled = false;
-            Handler.Send(SelectedPort, "ATH");
+            Handler.Send(SelectedPort, "ATA\r");
         }
 
 
@@ -118,7 +118,7 @@ namespace Modem.WPF
                     MessageBoxImage.Information);
                 return;
             }
-            Handler.Send(SelectedPort, Send_TextBox.Text);
+            Handler.Send(SelectedPort, Send_TextBox.Text + '\r');
             Send_TextBox.Text = "";
         }
 
@@ -161,9 +161,9 @@ namespace Modem.WPF
                         {
                             Recieve_TextBox.Text += Encoding.UTF8.GetString(Char);
                         }
-                        
+                        Thread.Sleep(1000);
                     }), DispatcherPriority.Background);
-                    Thread.Sleep(100);
+                    Thread.Sleep(1000);
                     if (ct.IsCancellationRequested)
                     {
                         // another thread decided to cancel
