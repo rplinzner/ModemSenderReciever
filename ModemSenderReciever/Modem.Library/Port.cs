@@ -18,7 +18,13 @@ namespace Modem.Library
                 PortName = portName,
                 BaudRate = baudRate,
                 DataBits = dataBits,
-                Parity = parity
+                Parity = parity,
+                StopBits = StopBits.One,
+                DtrEnable = true,
+                RtsEnable = true,
+                ReadTimeout = 500,
+                WriteTimeout = 500
+
             };
         }
 
@@ -39,7 +45,7 @@ namespace Modem.Library
             };
             Write(bytes, 0, 1);
         }
-       
+
         public void Open()
         {
             _port.Open();
@@ -51,14 +57,11 @@ namespace Modem.Library
 
         public bool CheckBufferEmpty()
         {
-            if (_port.BytesToRead == 0) return true;
-            return false;
+            return _port.BytesToRead == 0;
         }
         public byte Read()
         {
-            
             return (byte)_port.ReadByte();
-            
         }
 
 

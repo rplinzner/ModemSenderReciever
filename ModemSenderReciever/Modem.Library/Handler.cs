@@ -10,27 +10,29 @@ namespace Modem.Library
         private static bool busy;
         public static void Call(Port port, string number)
         {
-            string command = "ATD" + number + '\r';
+            string command = "ATD" + number;
             Send(port, command);
         }
         public static void Send(Port port, string message)
         {
-            /*var SendThis = Encoding.Default.GetBytes(message);
-            var n = SendThis.Length;*/
+            
+            //var n = SendThis.Length;
             //port.Write(SendThis, 0, n); //check if you have to send each letter individually
             //TODO: Check working version
-            /*foreach (var b in SendThis)
+            
+            
+            foreach (var b in message)
             {
-                port.WriteCharacter(b);
-            }*/
-            busy = true;
-            port.WriteString(message);
-            busy = false;
+                busy = true;
+                port.WriteCharacter(Convert.ToByte(b));
+                busy = false;
+            }
+            port.WriteCharacter(Convert.ToByte('\r'));
+            
         }
 
         public static char Recieve(Port port)
         {
-            char Char;
             while (true)
             {
                 if (!busy)
@@ -40,7 +42,7 @@ namespace Modem.Library
                         Thread.Sleep(1000);
                     }
 
-                    Char = Convert.ToChar(port.Read());
+                    var Char = Convert.ToChar(port.Read());
                     return Char;
                 }
                 Thread.Sleep(10);

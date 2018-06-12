@@ -106,7 +106,7 @@ namespace Modem.WPF
         {
             CallBtn.IsEnabled = false;
             NumberTextBox.IsEnabled = false;
-            Handler.Send(SelectedPort, "ATA\r");
+            Handler.Send(SelectedPort, "ATA");
         }
 
 
@@ -118,7 +118,7 @@ namespace Modem.WPF
                     MessageBoxImage.Information);
                 return;
             }
-            Handler.Send(SelectedPort, Send_TextBox.Text + '\r');
+            Handler.Send(SelectedPort, Send_TextBox.Text);
             Send_TextBox.Text = "";
         }
 
@@ -150,9 +150,8 @@ namespace Modem.WPF
             {
                 RecieveButton.Content = "STOP RECIEVING";
             }
-            
-            thread = new Thread(Recieve);
-            thread.IsBackground = true;
+
+            thread = new Thread(Recieve) {IsBackground = true};
             thread.Start();
         }
 
@@ -161,12 +160,9 @@ namespace Modem.WPF
         private void NumberTextBox_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             char c = Convert.ToChar(e.Text);
-            if (Char.IsNumber(c))
-                e.Handled = false;
-            else
-                e.Handled = true;
+            e.Handled = !Char.IsNumber(c);
 
-            base.OnPreviewTextInput(e);
+            OnPreviewTextInput(e);
         }
 
 
